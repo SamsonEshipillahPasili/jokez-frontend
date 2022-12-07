@@ -1,6 +1,8 @@
-import { Button, Label, TextInput } from "flowbite-react";
+import { Button, Label, TextInput, Alert } from "flowbite-react";
 import PlainNavigationBar from "./PlainNavigationBar";
 import {Link} from "react-router-dom";
+import { HiInformationCircle } from 'react-icons/hi';
+import JokezAlert from "./JokezAlert";
 
 function SignInView() {
     return (
@@ -8,6 +10,12 @@ function SignInView() {
         <PlainNavigationBar />
         <div className="w-full px-3 mt-6 md:px-0 md:w-96 md:mx-auto">
         <form className="flex flex-col gap-4">
+            <JokezAlert
+                color='failure'
+                icon={HiInformationCircle}
+                title='Error'
+                description='There was an error'
+            />
             <h2 className="text-3xl font-bold text-center">Sign In</h2>
             <div>
                 <div className="mb-2 block">
