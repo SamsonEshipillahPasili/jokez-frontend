@@ -3,8 +3,10 @@ import PlainNavigationBar from "./PlainNavigationBar";
 import {Link} from "react-router-dom";
 import { HiInformationCircle } from 'react-icons/hi';
 import JokezAlert from "./JokezAlert";
+// import {useQueryClient} from "@tanstack/react-query";
 
 function SignInView() {
+
     return (
         <>
         <PlainNavigationBar />
