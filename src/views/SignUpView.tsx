@@ -3,6 +3,7 @@ import PlainNavigationBar from "./PlainNavigationBar";
 import { Link } from "react-router-dom";
 import { Formik, Form, useField } from "formik";
 import * as Yup from 'yup';
+import AuthFormTextField from "./AuthFormTextField";
 
 interface SignUpData {
     username: string
@@ -33,19 +34,6 @@ const validationSchema = Yup.object({
         .oneOf([Yup.ref('password1')], 'Passwords do not match')
 });
 
-function AuthFormTextField({ label, ...props }: any) {
-    const [fieldProps, metadata] = useField(props);
-    return (
-        <div className="space-y-2">
-            <Label 
-                htmlFor={props.name}
-                value={label}
-            />
-            <TextInput {...props} {...fieldProps} />
-            {metadata.error && metadata.touched ?  (<small className="text-red-600">{metadata.error}</small>) : null}
-        </div>
-    );
-}
 
 function SignUpView() {
     function onSubmit(values: any, {setSubmitting}: any) {
