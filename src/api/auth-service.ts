@@ -4,7 +4,11 @@ import User from "./models/User";
 const users: User[] = [];
 
 export async function signUp(user: User): Promise<void> {
-    users.push(user);
+    return new Promise((resolve) => {
+        setTimeout(() => {
+            users.push(user);
+        }, 3000);
+    });
 }
 
 export async function signIn({username, password}: SignInData): Promise<string> {
