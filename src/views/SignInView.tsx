@@ -7,9 +7,9 @@ import * as Yup from 'yup';
 import { Formik, Form } from "formik";
 import AuthFormTextField from "./AuthFormTextField";
 import SignInData from '../api/models/SignInData'
-import { useState } from "react";
 import { signIn } from "../api/auth-service";
 import { useNavigate } from 'react-router-dom';
+import { useAsyncLoader } from "./form-utils";
 
 const initialData: SignInData = {
     username: '', password: ''
@@ -26,40 +26,17 @@ const validationSchema = Yup.object({
         .max(15, 'Password cannot exceed 15 characters'),
 });
 
-interface SignInState {
-    loading: boolean
-    error: string | null
-    data: string  | null
-}
-
-function useSignIn(initialState: SignInState)  {
-    const [state, setState] = useState<SignInState>(initialState);
-    const signInExecutor = async (callback: () => Promise<any>) => {
-        if (state.loading) {
-            return;
-        }
-        setState({loading: true, error: null, data: null})
-        try {
-            const result = await callback();
-            setState({loading: false, error: null, data: result})
-        } catch (e: any) {
-            const msg = e.message || 'There was an error';
-            setState({loading: false, error: msg, data: null})
-        }
-    };
-    return {state, signInExecutor};
-}
-
 function SignInView() {
-    const {state, signInExecutor} = useSignIn({loading: false, error: null, data: null});
+    const {state, loader} = useAsyncLoader<string>();
     const navigate = useNavigate();
 
     function onSubmit(values: any) {
-        signInExecutor(async () => {
+        loader(async () => {
             const token = await signIn({username: values.username, password: values.password});
             // todo:- use token
             // todo: hard-coded route?
             navigate('/my_jokes');
+            return token;
         });
     }
 
