@@ -1,17 +1,14 @@
-import { Button, Label, TextInput, Alert } from "flowbite-react";
+import { Button, Spinner } from "flowbite-react";
 import PlainNavigationBar from "./PlainNavigationBar";
 import { Link } from "react-router-dom";
 import { HiInformationCircle } from 'react-icons/hi';
 import JokezAlert from "./JokezAlert";
-// import {useQueryClient} from "@tanstack/react-query";
 import * as Yup from 'yup';
 import { Formik, Form } from "formik";
 import AuthFormTextField from "./AuthFormTextField";
-
-interface SignInData {
-    username: string
-    password: string
-}
+import SignInData from '../api/models/SignInData'
+import { useState } from "react";
+import { signIn } from "../api/auth-service";
 
 const initialData: SignInData = {
     username: '', password: ''
@@ -21,20 +18,45 @@ const validationSchema = Yup.object({
     username: Yup.string()
         .required('Username is required')
         .min(5, 'Username should be 5 characters or more')
-        .max(10, 'Username cannot exceed 10 characters'),
+        .max(15, 'Username cannot exceed 15 characters'),
     password: Yup.string()
         .required('Password is required')
         .min(8, 'Password should be 8 characters or more')
         .max(15, 'Password cannot exceed 15 characters'),
 });
 
-function SignInView() {
+interface SignInState {
+    loading: boolean
+    error: string | null
+    data: string  | null
+}
 
-    function onSubmit(values: any, {setSubmitting}: any) {
-        setTimeout(() => {
-            setSubmitting(false);
-            alert(JSON.stringify(values, null, 2));
-        }, 3000);
+function useSignIn(initialState: SignInState)  {
+    const [state, setState] = useState<SignInState>(initialState);
+    const signInExecutor = async (callback: () => Promise<any>) => {
+        if (state.loading) {
+            return;
+        }
+        setState({loading: true, error: null, data: null})
+        try {
+            const result = await callback();
+            setState({loading: false, error: null, data: result})
+        } catch (e: any) {
+            const msg = e.message || 'There was an error';
+            setState({loading: false, error: msg, data: null})
+        }
+    };
+    return {state, signInExecutor};
+}
+
+function SignInView() {
+    const {state, signInExecutor} = useSignIn({loading: false, error: null, data: null});
+
+    function onSubmit(values: any) {
+        signInExecutor(async () => {
+            const token = await signIn({username: values.username, password: values.password});
+            // todo:- use token
+        });
     }
 
     return (
@@ -47,17 +69,23 @@ function SignInView() {
                 onSubmit={onSubmit}
                 >
                     <Form className="flex flex-col gap-4">
+                        {state.error && 
                         <JokezAlert
                             color='failure'
                             icon={HiInformationCircle}
                             title='Error'
-                            description='There was an error'
-                        />
+                            description={state.error}
+                        />}
                         <h2 className="text-3xl font-bold text-center">Sign In</h2>
                         <AuthFormTextField label='Enter your username' name='username' type='text' />
                         <AuthFormTextField label='Enter your password' name='password' type='password' />
                         <Button type="submit">
-                            Submit
+                            {state.loading && 
+                            <div className="mr-3">
+                                <Spinner size="sm" light={true} />
+                            </div>
+                            }
+                            {state.loading ? <span>Signin In</span> : <span>Sign In</span>}
                         </Button>
                         <div>
                             <p>Don't have an account? <Link to='/sign_up'>Sign Up</Link> </p>
