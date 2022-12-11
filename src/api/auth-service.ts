@@ -10,7 +10,7 @@ export async function signUp(user: User): Promise<void> {
 export async function signIn({username, password}: SignInData): Promise<string> {
     return new Promise((resolve, reject) => {
         setTimeout(() => {
-            if (username === 'sam' && password === 'pass') {
+            if (username === 'sam@gmail.com' && password === 'password') {
                 resolve('some token');
             } else {
                 reject(new Error('Invalid credentials'));

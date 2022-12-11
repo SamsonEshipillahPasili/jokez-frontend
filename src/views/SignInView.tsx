@@ -9,6 +9,7 @@ import AuthFormTextField from "./AuthFormTextField";
 import SignInData from '../api/models/SignInData'
 import { useState } from "react";
 import { signIn } from "../api/auth-service";
+import { useNavigate } from 'react-router-dom';
 
 const initialData: SignInData = {
     username: '', password: ''
@@ -51,11 +52,14 @@ function useSignIn(initialState: SignInState)  {
 
 function SignInView() {
     const {state, signInExecutor} = useSignIn({loading: false, error: null, data: null});
+    const navigate = useNavigate();
 
     function onSubmit(values: any) {
         signInExecutor(async () => {
             const token = await signIn({username: values.username, password: values.password});
             // todo:- use token
+            // todo: hard-coded route?
+            navigate('/my_jokes');
         });
     }
 
