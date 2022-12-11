@@ -1,9 +1,11 @@
-import { Button, Label, TextInput } from "flowbite-react";
+import { Button, Spinner } from "flowbite-react";
 import PlainNavigationBar from "./PlainNavigationBar";
-import { Link } from "react-router-dom";
-import { Formik, Form, useField } from "formik";
+import { Link, useNavigate } from "react-router-dom";
+import { Formik, Form } from "formik";
 import * as Yup from 'yup';
 import AuthFormTextField from "./AuthFormTextField";
+import { useAsyncLoader } from "./form-utils";
+import { signUp } from "../api/auth-service";
 
 interface SignUpData {
     username: string
@@ -36,12 +38,15 @@ const validationSchema = Yup.object({
 
 
 function SignUpView() {
-    function onSubmit(values: any, {setSubmitting}: any) {
-        setTimeout(() => {
-            console.log(values);
-            alert(JSON.stringify(values, null, 2));
-            setSubmitting(false);
-        }, 3000);
+    const {state, loader} = useAsyncLoader<null>();
+    const navigate = useNavigate();
+
+    function onSubmit(values: any) {
+        loader(async () => {
+            await signUp(values);
+            navigate('/sign_in');
+            return null;
+        });
     }
 
     return (
@@ -60,7 +65,11 @@ function SignUpView() {
                         <AuthFormTextField name='password1' type='password' label='Enter your password' />
                         <AuthFormTextField name='password2' type='password' label='Enter your password again' />
                         <Button type="submit">
-                            Submit
+                            {state.loading && <div className="mr-3">
+                                <Spinner size="sm" />
+                            </div>
+                            }
+                            {state.loading ? <span>Loading ...</span>: <span>Submit</span>}
                         </Button>
                         <div>
                             <p>Already have an account? <Link to='/sign_in'>Sign In</Link></p>

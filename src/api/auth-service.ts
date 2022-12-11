@@ -7,6 +7,7 @@ export async function signUp(user: User): Promise<void> {
     return new Promise((resolve) => {
         setTimeout(() => {
             users.push(user);
+            resolve();
         }, 3000);
     });
 }
