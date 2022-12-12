@@ -1,25 +1,11 @@
-import Joke from "./Joke";
+import Joke from "./JokeComponent";
 import { Pagination } from "flowbite-react";
 
 function AllJokes() {
     return (
         <>
             <div className="space-y-4">
-                <Joke />
-                <Joke />
-                <Joke />
-                <Joke />
-                <Joke />
-                <Joke />
-                <Joke />
-                <Joke />
-                <Joke />
-                <Joke />
-                <Joke />
-                <Joke />
-                <Joke />
-                <Joke />
-                <Joke />
+                {/* <Joke showUpdateControls={false} joke /> */}
             </div>
         </>
     );
