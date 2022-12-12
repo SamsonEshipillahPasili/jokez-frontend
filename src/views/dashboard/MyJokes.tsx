@@ -1,7 +1,7 @@
-import { useEffect } from "react";
-import { getMyJokes } from "../../api/auth-service";
+import {useEffect} from "react";
+import {getMyJokes} from "../../api/auth-service";
 import Joke from "../../api/models/Joke";
-import { useAsyncLoader } from "../form-utils";
+import {useAsyncLoader} from "../form-utils";
 import JokeComponent from "./JokeComponent";
 import LoadingJokesComponent from "./LoadingJokesComponent";
 import LoadJokesErrorComponent from "./LoadJokesErrorComponent";
@@ -9,10 +9,7 @@ import LoadJokesErrorComponent from "./LoadJokesErrorComponent";
 function MyJokes() {
     const {state, loader} = useAsyncLoader<Joke[]>();
     useEffect(() => {
-        loader(async () => {
-            const jokes = await getMyJokes();
-            return jokes;
-        });
+        loader(getMyJokes);
     }, []);
 
     if (state.loading) {
@@ -23,7 +20,7 @@ function MyJokes() {
 
     if (state.error) {
         return (
-           <LoadJokesErrorComponent error={state.error} />
+           <LoadJokesErrorComponent error={state.error} tryAgainFunc={() => loader(getMyJokes)} />
         );
     }
 

@@ -11,9 +11,7 @@ function AllJokes() {
     const {state, loader} = useAsyncLoader<Joke[]>();
 
     useEffect(() => {
-        loader(async () => {
-            return await getAllJokes();
-        });
+        loader(getAllJokes);
     }, []);
 
     if (state.loading) {
@@ -24,7 +22,7 @@ function AllJokes() {
 
     if (state.error) {
         return (
-            <LoadJokesErrorComponent error={state.error}/>
+            <LoadJokesErrorComponent error={state.error} tryAgainFunc={() => loader(getAllJokes)}/>
         );
     }
 

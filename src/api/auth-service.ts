@@ -27,7 +27,7 @@ export async function signIn({username, password}: SignInData): Promise<string> 
 }
 
 export async function getMyJokes(): Promise<Joke[]> {
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
         setTimeout(() => {
             const myJokes: Joke[] = [];
             for(let i = 0; i < 5; i++) {
@@ -38,7 +38,8 @@ export async function getMyJokes(): Promise<Joke[]> {
                     createdDate: faker.date.recent().toUTCString()
                 });
             }
-            resolve(myJokes);
+            const randValue = Math.floor(Math.random() * 10);
+            randValue < 3 ? reject(new Error('There was a network error')) : resolve(myJokes);
         }, 300);
     });
 }
