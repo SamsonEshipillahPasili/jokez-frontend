@@ -26,11 +26,11 @@ export async function signIn({username, password}: SignInData): Promise<string> 
     });
 }
 
-export async function getJokes(): Promise<Joke[]> {
+export async function getMyJokes(): Promise<Joke[]> {
     return new Promise((resolve) => {
         setTimeout(() => {
             const myJokes: Joke[] = [];
-            for(let i = 0; i < 10; i++) {
+            for(let i = 0; i < 5; i++) {
                 myJokes.push({
                     id: faker.datatype.number(),
                     content: faker.random.words() ,
@@ -41,4 +41,8 @@ export async function getJokes(): Promise<Joke[]> {
             resolve(myJokes);
         }, 300);
     });
+}
+
+export async function getAllJokes() {
+    return getMyJokes();
 }

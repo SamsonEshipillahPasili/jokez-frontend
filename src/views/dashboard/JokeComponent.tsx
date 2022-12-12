@@ -26,4 +26,5 @@ function JokeComponent({showUpdateControls, joke}: JokeComponentProps) {
     );
 }
 
+
 export default JokeComponent;
